@@ -32,10 +32,10 @@ create_chat()
     # speak("Please tell me how may I help you")
 
 
-listener = sr.Recognizer()
-engi = pyttsx3.init()
-voices = engi.getProperty('voices')
-engi.setProperty('voice', voices[0].id)
+# listener = sr.Recognizer()
+# engi = pyttsx3.init()
+# voices = engi.getProperty('voices')
+# engi.setProperty('voice', voices[0].id)
 # hello()
 
 
