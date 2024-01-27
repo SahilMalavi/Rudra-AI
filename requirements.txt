@@ -2,3 +2,5 @@ streamlit
 PyPDF2
 google.generativeai
 pywhatkit
+pip install -r requirements.txt
+
