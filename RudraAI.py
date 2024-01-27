@@ -2,7 +2,7 @@ import threading
 from PIL import Image
 import streamlit as st
 import datetime
-import pyttsx3
+# import pyttsx3
 import speech_recognition as sr
 import webbrowser
 import pywhatkit
@@ -13,11 +13,11 @@ from gemini import gemini_IMGresponse
 from gemini import create_chat
 create_chat()
 
-def speak(text):
-    print("\n ==> Rudra AI :",text)
-    print("")
-    engi.say(text)
-    engi.runAndWait()
+# def speak(text):
+#     print("\n ==> Rudra AI :",text)
+#     print("")
+#     engi.say(text)
+#     engi.runAndWait()
 
 def hello():
     hour = int(datetime.datetime.now().hour)
@@ -40,20 +40,20 @@ engi.setProperty('voice', voices[0].id)
 # hello()
 
 
-def speechRecognition():
-    try:    
-        with sr.Microphone() as src:
-            print("listening....")
-            # listener.pause_threshold=1
-            # voice = listener.listen(src)
+# def speechRecognition():
+#     try:    
+#         with sr.Microphone() as src:
+#             print("listening....")
+#             # listener.pause_threshold=1
+#             # voice = listener.listen(src)
 
         
-            print("Recongnizing....")
-            # command = listener.recognize_google(voice,language="en")
-            command = input("\nEnter your Query: ")
-            return command.lower()
-    except:
-        return ""
+#             print("Recongnizing....")
+#             # command = listener.recognize_google(voice,language="en")
+#             command = input("\nEnter your Query: ")
+#             return command.lower()
+#     except:
+#         return ""
 
 def rudra(query):
     try:
