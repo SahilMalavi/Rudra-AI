@@ -1,9 +1,8 @@
-import threading
 from PIL import Image
 import streamlit as st
 import datetime
 # import pyttsx3
-import speech_recognition as sr
+# import speech_recognition as sr
 import webbrowser
 import pywhatkit
 # import pyaudio
@@ -19,16 +18,16 @@ create_chat()
 #     engi.say(text)
 #     engi.runAndWait()
 
-def hello():
-    hour = int(datetime.datetime.now().hour)
-    if 0 <= hour < 12:
-        speak("Good Morning master")
+# def hello():
+#     hour = int(datetime.datetime.now().hour)
+#     if 0 <= hour < 12:
+#         speak("Good Morning master")
 
-    elif hour >= 12 and hour < 18:
-        speak("Good Afternoon master")
+#     elif hour >= 12 and hour < 18:
+#         speak("Good Afternoon master")
 
-    else:
-        speak("Good Evening master")
+#     else:
+#         speak("Good Evening master")
 
     # speak("Please tell me how may I help you")
 
