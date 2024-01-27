@@ -4,7 +4,7 @@ import datetime
 # import pyttsx3
 # import speech_recognition as sr
 import webbrowser
-import pywhatkit
+# import pywhatkit
 # import pyaudio
 
 from gemini import gemini_response
