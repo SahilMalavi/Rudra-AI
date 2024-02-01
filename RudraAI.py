@@ -84,11 +84,11 @@ def rudra(query):
             else:
                 return "please say command like this. (example-open website youtube.com )"
 
-        elif 'play on youtube' in query:
-                song = query.replace("play", "")
-                song = song.replace("on youtube", "")
-                pywhatkit.playonyt(song)
-                return "playing."
+        # elif 'play on youtube' in query:
+        #         song = query.replace("play", "")
+        #         song = song.replace("on youtube", "")
+        #         pywhatkit.playonyt(song)
+        #         return "playing."
 
         # elif "bye" in query:
         #     sys.exit()
@@ -115,11 +115,12 @@ def main():
 
     st.sidebar.title("ASK TO IMAGE")
     uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    # ask_to_image_button = st.sidebar.button("Upload")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for you purpose only: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, you can also able to open any webpages on the internet, you only tell user to enter [open website youtube.com] this command, play any song on youtube when user enter command [play on youtube],you only tell user to enter [play on youtube 'song'] this command. only tell user to enter [what is current time] this command to know current time,only tell user to enter [what is todays date] this command, to know todays date],okay so hii rudra"
+    prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for you purpose only: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, you can also able to open any webpages on the internet, you only tell user to enter [open website youtube.com] this command. only tell user to enter [what is current time] this command to know current time,only tell user to enter [what is todays date] this command, to know todays date],okay so hii rudra"
     
     first_response=gemini_response(prompt)
 
@@ -136,7 +137,8 @@ def main():
     if uploaded_image is not None:
         image = Image.open(uploaded_image)
         st.image(image, caption="Uploaded Image")
-
+        st.sidebar.write("remove image to go back to the Rudra AI")
+        st.title("Rudra Image AI")
         if prompt := st.chat_input("Ask to image"):
             prompt= prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
