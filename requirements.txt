@@ -1,5 +1,5 @@
+pywhatkit
 streamlit
 PyPDF2
 google.generativeai
-pywhatkit
 IPython
