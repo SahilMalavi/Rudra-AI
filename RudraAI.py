@@ -1,5 +1,5 @@
 from PIL import Image
-import pywhatkit
+# import pywhatkit
 import streamlit as st
 import datetime
 # import pyttsx3
