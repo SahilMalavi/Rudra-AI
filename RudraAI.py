@@ -1,4 +1,5 @@
 from PIL import Image
+import pywhatkit
 import streamlit as st
 import datetime
 # import pyttsx3
@@ -11,6 +12,7 @@ from gemini import gemini_response
 from gemini import gemini_IMGresponse
 from gemini import create_chat
 create_chat()
+
 
 # def speak(text):
 #     print("\n ==> Rudra AI :",text)
@@ -60,7 +62,7 @@ def rudra(query):
         print("\n ==> Master : ",query)
 
        
-        if 'time' in query or 'date' in query:
+        if 'current time' in query or 'todays date' in query:
                 if 'time' in query and 'date' in query:
                     time = datetime.datetime.now().strftime('%I:%M %p')
                     current_date = datetime.datetime.now().date()
@@ -72,19 +74,19 @@ def rudra(query):
                     current_date = datetime.datetime.now().date()
                     return 'Todays date is '+str(current_date)
                 
-                
-        elif 'open stackoverflow' in query:
-                webbrowser.open("stackoverflow.com")
  
-        elif 'open' in query:
-            if ".com" in query or ".in" in query or ".org" in query or ".online" in query:
+        elif 'open website' in query:
+            if ".com" in query or ".in" in query or ".org" in query or ".online" in query or ".io" in query:
                 openweb = query.replace("open", "")
+                openweb= openweb.replace("website","")
                 webbrowser.open(openweb)
+                return "opening "+openweb
             else:
-                return "please say command with full domain name. (example- youtube.com)"
+                return "please say command like this. (example-open website youtube.com )"
 
-        elif 'play' in query:
+        elif 'play on youtube' in query:
                 song = query.replace("play", "")
+                song = song.replace("on youtube", "")
                 pywhatkit.playonyt(song)
                 return "playing."
 
@@ -97,9 +99,9 @@ def rudra(query):
              return "please say command again.."
 
         else:
-            prompt=f"hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for you purpose only: please sometime answer in only single line and sometime answer briefly point wise according to the query,,in english only, you can also able to open any webpages on internet,play any song on youtube]. pls respond to: {query}"  
+            # prompt=f" pls respond to: {query}"  
             # print(prompt)
-            response = gemini_response(prompt)
+            response = gemini_response(query)
             print()
             return response
 
@@ -117,9 +119,17 @@ def main():
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
+
+    prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for you purpose only: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, you can also able to open any webpages on the internet, you only tell user to enter [open website youtube.com] this command, play any song on youtube when user enter command [play on youtube],you only tell user to enter [play on youtube 'song'] this command. only tell user to enter [what is current time] this command to know current time,only tell user to enter [what is todays date] this command, to know todays date],okay so hii rudra"
     
-    # st.session_state.messages.append({"role": "assistant", "content": "Hello, how can I help you today?"})
-    
+    first_response=gemini_response(prompt)
+
+    # st.session_state.messages.append({"role": "assistant", "content": first_response})
+    with st.chat_message('assistant'):
+            st.markdown(first_response)
+
+    # st.session_state.messages.clear()
+
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -129,6 +139,7 @@ def main():
         st.image(image, caption="Uploaded Image")
 
         if prompt := st.chat_input("Ask to image"):
+            prompt= prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
@@ -141,6 +152,7 @@ def main():
             st.session_state.messages.append({"role": "assistant", "content": response})
     else:
         if prompt := st.chat_input("Ask Rudra"):
+            prompt= prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
