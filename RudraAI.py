@@ -136,7 +136,6 @@ def main():
 
     if uploaded_image is not None:
         image = Image.open(uploaded_image)
-        st.title("Rudra Image AI")
         st.image(image, caption="Uploaded Image")
         st.sidebar.write("remove image to go back to the Rudra AI")
         
