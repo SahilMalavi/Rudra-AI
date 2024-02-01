@@ -115,7 +115,6 @@ def main():
 
     st.sidebar.title("ASK TO IMAGE")
     uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-    # ask_to_image_button = st.sidebar.button("Upload")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
