@@ -1,6 +1,10 @@
 from PIL import Image
 import pywhatkit
 import streamlit as st
+import pywhatkit
+from pywhatkit.whats import (
+import pyautogui as pg
+import mouseinfo
 import datetime
 # import pyttsx3
 # import speech_recognition as sr
