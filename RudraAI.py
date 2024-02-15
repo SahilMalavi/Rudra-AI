@@ -55,7 +55,7 @@ create_chat()
 #             return command.lower()
 #     except:
 #         return ""
-
+try:
     def rudra(query):
         try:
             # query = speechRecognition()
@@ -165,8 +165,9 @@ create_chat()
                         print("\n ==> Rudra AI :", response)
                     st.session_state.messages.append({"role": "assistant", "content": response})
     except:
-        st.write("We apologize for the inconvenience. Please check back in a few minutes.");
-    
+        st.write("We apologize for the inconvenience. Please check back in a few minutes.")
+except:
+    st.write("We apologize for the inconvenience. Please check back in a few minutes.")
 if __name__ == "__main__":
     main()
 
