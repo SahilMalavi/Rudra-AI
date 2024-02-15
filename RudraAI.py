@@ -1,61 +1,16 @@
 
 from PIL import Image
-# import pywhatkit
 import streamlit as st
 import datetime
-# import pyttsx3
-# import speech_recognition as sr
+
 import webbrowser
-# import pywhatkit
-# import pyaudio
+
 
 from gemini import gemini_response
 from gemini import gemini_IMGresponse
 from gemini import create_chat
 create_chat()
 
-
-# def speak(text):
-#     print("\n ==> Rudra AI :",text)
-#     print("")
-#     engi.say(text)
-#     engi.runAndWait()
-
-# def hello():
-#     hour = int(datetime.datetime.now().hour)
-#     if 0 <= hour < 12:
-#         speak("Good Morning master")
-
-#     elif hour >= 12 and hour < 18:
-#         speak("Good Afternoon master")
-
-#     else:
-#         speak("Good Evening master")
-
-    # speak("Please tell me how may I help you")
-
-
-# listener = sr.Recognizer()
-# engi = pyttsx3.init()
-# voices = engi.getProperty('voices')
-# engi.setProperty('voice', voices[0].id)
-# hello()
-
-
-# def speechRecognition():
-#     try:    
-#         with sr.Microphone() as src:
-#             print("listening....")
-#             # listener.pause_threshold=1
-#             # voice = listener.listen(src)
-
-        
-#             print("Recongnizing....")
-#             # command = listener.recognize_google(voice,language="en")
-#             command = input("\nEnter your Query: ")
-#             return command.lower()
-#     except:
-#         return ""
 try:
     def rudra(query):
         try:
@@ -84,16 +39,7 @@ try:
                     return "opening "+openweb
                 else:
                     return "please say a command like this. (example-open website youtube.com )"
-    
-            # elif 'play on youtube' in query:
-            #         song = query.replace("play", "")
-            #         song = song.replace("on youtube", "")
-            #         pywhatkit.playonyt(song)
-            #         return "playing."
-    
-            # elif "bye" in query:
-            #     sys.exit()
-            #     return speak("Nice to meet you Master, Bye")
+
                
     
             elif not query:
@@ -122,7 +68,7 @@ try:
             if "messages" not in st.session_state:
                 st.session_state.messages = []
         
-            prompt="Your name is Rudra. hey Rudra. hey Rudra, I am Sahil, and your task is to serve my query's or talk with me, [instruction for your purpose only, don't print this on screen: please sometimes answer in only a single line and sometimes answer briefly point-wise according to the query,in English only ], hii Rudra"
+            prompt="Your name is Rudra. developed by me using Gemini API. hey Rudra, I am Sahil, and your task is to serve my queries or talk with me, [instruction for your purpose only, don't print this on screen: please sometimes answer in only a single line and sometimes answer briefly point-wise according to the query,in English only ], hii Rudra"
             
             first_response=gemini_response(prompt)
         
