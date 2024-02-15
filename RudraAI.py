@@ -73,7 +73,7 @@ try:
                         return 'Current time is ' + time
                     elif 'date' in query:
                         current_date = datetime.datetime.now().date()
-                        return 'Today's date is '+str(current_date)
+                        return 'Todays date is '+str(current_date)
                     
      
             elif 'open website' in query:
