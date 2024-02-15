@@ -1,3 +1,61 @@
+
+from PIL import Image
+# import pywhatkit
+import streamlit as st
+import datetime
+# import pyttsx3
+# import speech_recognition as sr
+import webbrowser
+# import pywhatkit
+# import pyaudio
+
+from gemini import gemini_response
+from gemini import gemini_IMGresponse
+from gemini import create_chat
+create_chat()
+
+
+# def speak(text):
+#     print("\n ==> Rudra AI :",text)
+#     print("")
+#     engi.say(text)
+#     engi.runAndWait()
+
+# def hello():
+#     hour = int(datetime.datetime.now().hour)
+#     if 0 <= hour < 12:
+#         speak("Good Morning master")
+
+#     elif hour >= 12 and hour < 18:
+#         speak("Good Afternoon master")
+
+#     else:
+#         speak("Good Evening master")
+
+    # speak("Please tell me how may I help you")
+
+
+# listener = sr.Recognizer()
+# engi = pyttsx3.init()
+# voices = engi.getProperty('voices')
+# engi.setProperty('voice', voices[0].id)
+# hello()
+
+
+# def speechRecognition():
+#     try:    
+#         with sr.Microphone() as src:
+#             print("listening....")
+#             # listener.pause_threshold=1
+#             # voice = listener.listen(src)
+
+        
+#             print("Recongnizing....")
+#             # command = listener.recognize_google(voice,language="en")
+#             command = input("\nEnter your Query: ")
+#             return command.lower()
+#     except:
+#         return ""
 try:
     def rudra(query):
         try:
@@ -113,3 +171,6 @@ except:
      st.write("We apologize for the inconvenience. Please check back in a few minutes.")
 if __name__ == "__main__":
     main()
+
+
+
