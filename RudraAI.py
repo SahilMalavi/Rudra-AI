@@ -111,60 +111,61 @@ try:
              
         
     def main():
-        sit.title("Rudra AI")
-    
-        st.sidebar.title("ASK TO IMAGE")
-        uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-        # ask_to_image_button = st.sidebar.button("Upload")
-    
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
-    
-        prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for you purpose only: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, you can also able to open any webpages on the internet, you only tell user to enter [open website youtube.com] this command. only tell user to enter [what is current time] this command to know current time,only tell user to enter [what is todays date] this command, to know todays date],okay so hii rudra"
+       try:
+            sit.title("Rudra AI")
         
-        first_response=gemini_response(prompt)
-    
-        # st.session_state.messages.append({"role": "assistant", "content": first_response})
-        with st.chat_message('assistant'):
-                st.markdown(first_response)
-    
-        # st.session_state.messages.clear()
-    
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-    
-        if uploaded_image is not None:
-            image = Image.open(uploaded_image)
-            st.image(image, caption="Uploaded Image")
-            st.sidebar.write("remove image to go back to the Rudra AI")
+            st.sidebar.title("ASK TO IMAGE")
+            uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+            # ask_to_image_button = st.sidebar.button("Upload")
+        
+            if "messages" not in st.session_state:
+                st.session_state.messages = []
+        
+            prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for your purpose only, don't print this on screen: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, ],okay so hii rudra"
             
-            if prompt := st.chat_input("Ask to image"):
-                prompt= prompt.lower()
-                st.session_state.messages.append({"role": "user", "content": prompt})
-                with st.chat_message("user"):
-                    st.markdown(prompt)
-                with st.chat_message("assistant"):
-                    message_placeholder = st.empty()
-                    response = gemini_IMGresponse(prompt, image)
-                    message_placeholder.markdown(response)
-                    print("\n ==> Rudra Image AI :", response)
-    
-                st.session_state.messages.append({"role": "assistant", "content": response})
-        else:
-            if prompt := st.chat_input("Ask Rudra"):
-                prompt= prompt.lower()
-                st.session_state.messages.append({"role": "user", "content": prompt})
-                with st.chat_message("user"):
-                    st.markdown(prompt)
-                with st.chat_message("assistant"):
-                    message_placeholder = st.empty()
-                    response = rudra(prompt)
-                    message_placeholder.markdown(response)
-                    print("\n ==> Rudra AI :", response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
-except:
-    st.write("We apologize for the inconvenience. Please check back in a few minutes.");
+            first_response=gemini_response(prompt)
+        
+            # st.session_state.messages.append({"role": "assistant", "content": first_response})
+            with st.chat_message('assistant'):
+                    st.markdown(first_response)
+        
+            # st.session_state.messages.clear()
+        
+            for message in st.session_state.messages:
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
+        
+            if uploaded_image is not None:
+                image = Image.open(uploaded_image)
+                st.image(image, caption="Uploaded Image")
+                st.sidebar.write("remove image to go back to the Rudra AI")
+                
+                if prompt := st.chat_input("Ask to image"):
+                    prompt= prompt.lower()
+                    st.session_state.messages.append({"role": "user", "content": prompt})
+                    with st.chat_message("user"):
+                        st.markdown(prompt)
+                    with st.chat_message("assistant"):
+                        message_placeholder = st.empty()
+                        response = gemini_IMGresponse(prompt, image)
+                        message_placeholder.markdown(response)
+                        print("\n ==> Rudra Image AI :", response)
+        
+                    st.session_state.messages.append({"role": "assistant", "content": response})
+            else:
+                if prompt := st.chat_input("Ask Rudra"):
+                    prompt= prompt.lower()
+                    st.session_state.messages.append({"role": "user", "content": prompt})
+                    with st.chat_message("user"):
+                        st.markdown(prompt)
+                    with st.chat_message("assistant"):
+                        message_placeholder = st.empty()
+                        response = rudra(prompt)
+                        message_placeholder.markdown(response)
+                        print("\n ==> Rudra AI :", response)
+                    st.session_state.messages.append({"role": "assistant", "content": response})
+    except:
+        st.write("We apologize for the inconvenience. Please check back in a few minutes.");
     
 if __name__ == "__main__":
     main()
