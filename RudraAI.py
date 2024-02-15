@@ -55,7 +55,7 @@ create_chat()
 #             return command.lower()
 #     except:
 #         return ""
-try:
+
     def rudra(query):
         try:
             # query = speechRecognition()
