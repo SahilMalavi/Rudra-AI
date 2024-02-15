@@ -73,7 +73,7 @@ try:
                         return 'Current time is ' + time
                     elif 'date' in query:
                         current_date = datetime.datetime.now().date()
-                        return 'Todays date is '+str(current_date)
+                        return 'Today's date is '+str(current_date)
                     
      
             elif 'open website' in query:
@@ -83,7 +83,7 @@ try:
                     webbrowser.open(openweb)
                     return "opening "+openweb
                 else:
-                    return "please say command like this. (example-open website youtube.com )"
+                    return "please say a command like this. (example-open website youtube.com )"
     
             # elif 'play on youtube' in query:
             #         song = query.replace("play", "")
@@ -97,7 +97,7 @@ try:
                
     
             elif not query:
-                 return "please say command again.."
+                 return "please say the command again.."
     
             else:
                 # prompt=f" pls respond to: {query}"  
@@ -122,7 +122,7 @@ try:
             if "messages" not in st.session_state:
                 st.session_state.messages = []
         
-            prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for your purpose only, don't print this on screen: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, ], hii rudra"
+            prompt="Your name is Rudra. hey Rudra. hey Rudra, I am Sahil, and your task is to serve my query's or talk with me, [instruction for your purpose only, don't print this on screen: please sometimes answer in only a single line and sometimes answer briefly point-wise according to the query,in English only ], hii Rudra"
             
             first_response=gemini_response(prompt)
         
