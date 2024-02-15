@@ -122,7 +122,7 @@ try:
             if "messages" not in st.session_state:
                 st.session_state.messages = []
         
-            prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for your purpose only, don't print this on screen: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, ],okay so hii rudra"
+            prompt="hey Rudra, i am Sahil, your task is to serve my query's, or talk with me, [instruction for your purpose only, don't print this on screen: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english only, ], hii rudra"
             
             first_response=gemini_response(prompt)
         
