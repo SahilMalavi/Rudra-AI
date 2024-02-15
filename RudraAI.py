@@ -113,7 +113,7 @@ try:
         
     def main():
        try:
-            sit.title("Rudra AI")
+            st.title("Rudra AI")
         
             st.sidebar.title("ASK TO IMAGE")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
