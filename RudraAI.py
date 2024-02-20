@@ -58,7 +58,7 @@ try:
              
         
     def main():
-      # try:
+       try:
             st.title("Rudra AI")
         
             st.sidebar.title("ASK TO IMAGE")
@@ -111,8 +111,8 @@ try:
                         message_placeholder.markdown(response)
                         print("\n ==> Rudra AI :", response)
                     st.session_state.messages.append({"role": "assistant", "content": response})
-       #except:
-            # st.write("We apologize for the inconvenience. Please check back in a few minutes.")
+       except:
+            st.write("We apologize for the inconvenience. Please check back in a few minutes.")
 except:
      st.write("We apologize for the inconvenience. Please check back in a few minutes.")
 if __name__ == "__main__":
