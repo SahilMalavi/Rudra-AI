@@ -43,7 +43,7 @@ try:
                
     
             elif not query:
-                 return "please say the command again.."
+                 return "Please say the command again.."
     
             else:
                 # prompt=f" pls respond to: {query}"  
@@ -53,14 +53,14 @@ try:
                 return response
     
         except:
-             return "Error is occured while execution.!"
+             return "Error is occurred while execution.!"
              
              
         
     def main():
        try:
             st.title("Rudra AI")
-            st.set_page_config(page_title="Rudra AI",page_icon="🧊",layout="wide",initial_sidebar_state="expanded")
+            #st.set_page_config(page_title="Rudra AI",page_icon="🧊",layout="wide",initial_sidebar_state="expanded")
             st.sidebar.title("ASK TO IMAGE")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
             # ask_to_image_button = st.sidebar.button("Upload")
