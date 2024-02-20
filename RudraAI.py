@@ -60,12 +60,7 @@ try:
     def main():
        try:
             st.title("Rudra AI")
-            st.set_page_config(
-            page_title="Rudra AI",
-            page_icon="🧊",
-            layout="wide",
-            initial_sidebar_state="expanded",
-            )
+            st.set_page_config(page_title="Rudra AI",page_icon="🧊",layout="wide",initial_sidebar_state="expanded")
             st.sidebar.title("ASK TO IMAGE")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
             # ask_to_image_button = st.sidebar.button("Upload")
