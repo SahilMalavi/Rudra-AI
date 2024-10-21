@@ -49,8 +49,8 @@ def rudra(query):
 def main():
     try:
         st.title("Rudra AI")
-        st.sidebar.title("ASK TO IMAGE")
-        uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+        #st.sidebar.title("ASK TO IMAGE")
+        #uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
         if "messages" not in st.session_state:
             st.session_state.messages = []
