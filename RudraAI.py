@@ -49,8 +49,8 @@ def rudra(query):
 def main():
     try:
         st.title("Rudra AI")
-        #st.sidebar.title("ASK TO IMAGE")
-        #uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+        #st.sidebar.title("ASK TO IMAGE")  # Commented out
+        #uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])  # Commented out
 
         if "messages" not in st.session_state:
             st.session_state.messages = []
@@ -68,44 +68,45 @@ def main():
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        if uploaded_image is not None:
-            image = Image.open(uploaded_image)
-            st.image(image, caption="Uploaded Image")
-            st.sidebar.write("Remove the image to go back to Rudra AI.")
+        # if uploaded_image is not None:  # Commented out the entire block
+        #     image = Image.open(uploaded_image)
+        #     st.image(image, caption="Uploaded Image")
+        #     st.sidebar.write("Remove the image to go back to Rudra AI.")
+        #
+        #     if prompt := st.chat_input("Ask to image"):
+        #         prompt = prompt.lower()
+        #         st.session_state.messages.append({"role": "user", "content": prompt})
+        #         with st.chat_message("user"):
+        #             st.markdown(prompt)
+        #         with st.chat_message("assistant"):
+        #             message_placeholder = st.empty()
+        #             try:
+        #                 response = gemini_IMGresponse(prompt, image)
+        #                 message_placeholder.markdown(response)
+        #                 print("\n ==> Rudra Image AI:", response)
+        #             except Exception as e:
+        #                 message_placeholder.markdown("An error occurred while processing the image query.")
+        #                 print(f"Error with image AI: {e}")
+        #
+        #         st.session_state.messages.append({"role": "assistant", "content": response})
+        # else:  # Adjusted to continue without image handling
 
-            if prompt := st.chat_input("Ask to image"):
-                prompt = prompt.lower()
-                st.session_state.messages.append({"role": "user", "content": prompt})
-                with st.chat_message("user"):
-                    st.markdown(prompt)
-                with st.chat_message("assistant"):
-                    message_placeholder = st.empty()
-                    try:
-                        response = gemini_IMGresponse(prompt, image)
-                        message_placeholder.markdown(response)
-                        print("\n ==> Rudra Image AI:", response)
-                    except Exception as e:
-                        message_placeholder.markdown("An error occurred while processing the image query.")
-                        print(f"Error with image AI: {e}")
+        if prompt := st.chat_input("Ask Rudra"):
+            prompt = prompt.lower()
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                try:
+                    response = rudra(prompt)
+                    message_placeholder.markdown(response)
+                    print("\n ==> Rudra AI:", response)
+                except Exception as e:
+                    message_placeholder.markdown("An error occurred while processing your query.")
+                    print(f"Error occurred with text query: {e}")
 
-                st.session_state.messages.append({"role": "assistant", "content": response})
-        else:
-            if prompt := st.chat_input("Ask Rudra"):
-                prompt = prompt.lower()
-                st.session_state.messages.append({"role": "user", "content": prompt})
-                with st.chat_message("user"):
-                    st.markdown(prompt)
-                with st.chat_message("assistant"):
-                    message_placeholder = st.empty()
-                    try:
-                        response = rudra(prompt)
-                        message_placeholder.markdown(response)
-                        print("\n ==> Rudra AI:", response)
-                    except Exception as e:
-                        message_placeholder.markdown("An error occurred while processing your query.")
-                        print(f"Error occurred with text query: {e}")
-
-                st.session_state.messages.append({"role": "assistant", "content": response})
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
     except Exception as e:
         st.write("We apologize for the inconvenience. Please check back in a few minutes.")
