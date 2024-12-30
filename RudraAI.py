@@ -61,6 +61,15 @@ def rudra(query):
     except Exception as e:
         return f"Error occurred: {str(e)}"
 
+# Handling exceptions during "Ask to Image" feature
+def ask_to_image_with_retry(uploaded_image, prompt):
+    try:
+        image = Image.open(uploaded_image)
+        # Using the gemini_IMGresponse function to get response for the image and prompt
+        return gemini_IMGresponse(prompt, image)
+    except Exception as e:
+        return f"An error occurred while processing the image: {str(e)}"
+
 def main():
     st.title("Rudra AI")
 
@@ -82,20 +91,29 @@ def main():
             st.markdown(message["content"])
 
     if uploaded_image is not None:
-        image = Image.open(uploaded_image)
-        st.title("Rudra Image AI")
-        st.image(image, caption="Uploaded Image")
-        st.sidebar.write("Remove image to go back to Rudra AI")
-        if prompt := st.chat_input("Ask to image"):
-            prompt = prompt.lower()
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
-            with st.chat_message("assistant"):
-                message_placeholder = st.empty()
-                response = gemini_IMGresponse(prompt, image)
-                message_placeholder.markdown(response)
-            st.session_state.messages.append({"role": "assistant", "content": response})
+        try:
+            st.title("Rudra Image AI")
+            st.image(uploaded_image, caption="Uploaded Image")
+            st.sidebar.write("Remove image to go back to Rudra AI")
+            
+            if prompt := st.chat_input("Ask to image"):
+                prompt = prompt.lower()
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                
+                with st.chat_message("user"):
+                    st.markdown(prompt)
+
+                with st.chat_message("assistant"):
+                    message_placeholder = st.empty()
+                    response = ask_to_image_with_retry(uploaded_image, prompt)
+                    message_placeholder.markdown(response)
+                
+                st.session_state.messages.append({"role": "assistant", "content": response})
+        
+        except Exception as e:
+            st.sidebar.write(f"Error: {str(e)}")
+            st.sidebar.write("There was an issue processing the image. Please try again.")
+
     else:
         if prompt := st.chat_input("Ask Rudra"):
             prompt = prompt.lower()
