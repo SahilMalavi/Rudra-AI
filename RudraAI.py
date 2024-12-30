@@ -43,8 +43,8 @@ def rudra(query):
 def main():
     st.title("Rudra AI")
 
-    # Radio button to choose between chat and ask to image
-    choice = st.radio("Select Mode", ("Chat", "Ask to Image"))
+    # Radio button in the sidebar to choose between chat and ask to image
+    choice = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image"), index=0)  # Default to "Chat"
 
     if choice == "Chat":
         st.sidebar.title("Chat with Rudra")
