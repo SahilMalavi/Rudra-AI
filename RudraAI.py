@@ -1,53 +1,24 @@
-import time
-import datetime
 from PIL import Image
 import streamlit as st
+import datetime
 import webbrowser
+from gemini import gemini_response
+from gemini import gemini_IMGresponse
+from gemini import create_chat
 
-# Importing the necessary functions from gemini module
-from gemini import gemini_response, gemini_IMGresponse, create_chat
-
-# Initialize chat
 create_chat()
 
-def gemini_response_with_retry(input, retries=5, backoff=2):
-    """
-    Send a request to Gemini API with retries in case of ResourceExhausted error.
-    
-    Args:
-        input (str): The input for generating content.
-        retries (int): Number of retry attempts.
-        backoff (int): The initial delay between retries (exponential backoff).
-        
-    Returns:
-        str: The response from Gemini or a fallback message.
-    """
+# Handling the ResourceExhausted error and retry logic
+def gemini_response_with_retry(input, retries=3):
     try:
-        # Call the original gemini_response function to get the response from Gemini API
-        response = gemini_response(input)
-        return response
-    
-    except ResourceExhausted as e:
-        # If ResourceExhausted error occurs, retry with exponential backoff
-        if retries > 0:
-            print(f"Rate limit exceeded. Retrying in {backoff} seconds...")
-            time.sleep(backoff)  # Wait before retrying
-            return gemini_response_with_retry(input, retries - 1, backoff * 2)  # Exponential backoff
+        return gemini_response(input)
+    except Exception as e:
+        if retries > 0 and 'ResourceExhausted' in str(e):
+            return gemini_response_with_retry(input, retries - 1)
         else:
-            # If max retries are reached, return a fallback message
-            print("Max retries reached. Please try again later.")
             return "Service temporarily unavailable. Please try again later."
 
 def rudra(query):
-    """
-    Function to process user queries and return a response from Gemini or specific commands.
-    
-    Args:
-        query (str): The user query or command.
-        
-    Returns:
-        str: The response to the user's query.
-    """
     try:
         print("\n ==> Master : ", query)
 
@@ -68,30 +39,29 @@ def rudra(query):
                 openweb = query.replace("open", "")
                 openweb = openweb.replace("website", "")
                 webbrowser.open(openweb)
-                return "opening " + openweb
+                return "Opening " + openweb
             else:
-                return "Please say command like this. (example-open website youtube.com )"
+                return "Please say command like this: (example-open website youtube.com )"
 
         elif 'play on youtube' in query:
             song = query.replace("play", "")
             song = song.replace("on youtube", "")
-            return f"Playing {song} on YouTube."
+            # Commented out the pywhatkit dependency
+            # pywhatkit.playonyt(song)
+            return "Playing."
 
         elif not query:
             return "Please say command again.."
 
         else:
-            # Use gemini_response_with_retry function to handle retries on failure
+            # Using the gemini_response_with_retry to handle resource exhaustion
             response = gemini_response_with_retry(query)
             return response
 
     except Exception as e:
-        return f"An error occurred: {str(e)}"
+        return f"Error occurred: {str(e)}"
 
 def main():
-    """
-    Main function to drive the Streamlit app.
-    """
     st.title("Rudra AI")
 
     st.sidebar.title("ASK TO IMAGE")
@@ -100,7 +70,7 @@ def main():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    prompt = "Hey Rudra, I am Sahil. Your task is to serve my queries or talk with me. [Instruction: Please answer sometimes in a single line and sometimes briefly in points based on the query.]"
+    prompt = "Hey Rudra, I am Sahil, your task is to serve my queries or talk with me. Please respond concisely or in detail based on the query."
 
     first_response = gemini_response_with_retry(prompt)
 
@@ -116,33 +86,27 @@ def main():
         st.title("Rudra Image AI")
         st.image(image, caption="Uploaded Image")
         st.sidebar.write("Remove image to go back to Rudra AI")
-
         if prompt := st.chat_input("Ask to image"):
             prompt = prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
-
             with st.chat_message("user"):
                 st.markdown(prompt)
-
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 response = gemini_IMGresponse(prompt, image)
                 message_placeholder.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
-
+            st.session_state.messages.append({"role": "assistant", "content": response})
     else:
         if prompt := st.chat_input("Ask Rudra"):
             prompt = prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
-
             with st.chat_message("user"):
                 st.markdown(prompt)
-
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 response = rudra(prompt)
                 message_placeholder.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
 if __name__ == "__main__":
     main()
