@@ -28,7 +28,7 @@ def gemini_response(input):
     return response.text 
 
 def gemini_IMGresponse(prompt, img):
-    model = ai.GenerativeModel('gemini-pro-vision')
+    model = ai.GenerativeModel('gemini-1.5-flash')
     response = model.generate_content([prompt, img], stream=True)
     response.resolve()
     return response.text
