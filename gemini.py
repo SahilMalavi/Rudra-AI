@@ -14,7 +14,7 @@ def to_markdown(text):
     text = text.replace('•', '  *')
     return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-ai.configure(api_key="AIzaSyDNotlEkajE7Tk2jTiV9IRfp08xqCNjhcg")
+ai.configure(api_key="AIzaSyCvhpNhCsZkxnR2bie-RM6U5EcPGJYsYbU")
 
 def create_chat():
     model = ai.GenerativeModel('gemini-pro')
