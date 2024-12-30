@@ -1,5 +1,4 @@
 from PIL import Image
-import pywhatkit
 import streamlit as st
 import datetime
 import webbrowser
@@ -36,11 +35,11 @@ def rudra(query):
             else:
                 return "Please specify a valid website. Example: open website youtube.com"
 
-        # Handle play song on YouTube command
-        elif 'play on youtube' in query:
-            song = query.replace("play", "").replace("on youtube", "").strip()
-            pywhatkit.playonyt(song)
-            return "Playing your song on YouTube."
+        # Commented out pywhatkit-dependent code for playing song on YouTube
+        # elif 'play on youtube' in query:
+        #     song = query.replace("play", "").replace("on youtube", "").strip()
+        #     pywhatkit.playonyt(song)
+        #     return "Playing your song on YouTube."
 
         # Default response for unrecognized commands
         elif not query:
