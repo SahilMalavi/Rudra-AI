@@ -1,114 +1,143 @@
+import time
+import datetime
 from PIL import Image
 import streamlit as st
-import datetime
 import webbrowser
-from gemini import gemini_response
-from gemini import gemini_IMGresponse
-from gemini import create_chat
 
-create_chat()  # Initializes the chat with the Gemini API
+# Importing the necessary functions from gemini module
+from gemini import gemini_response, gemini_IMGresponse, create_chat
 
-# Function for responding to user queries
-def rudra(query):
+# Initialize chat
+create_chat()
+
+def gemini_response_with_retry(input, retries=5, backoff=2):
+    """
+    Send a request to Gemini API with retries in case of ResourceExhausted error.
+    
+    Args:
+        input (str): The input for generating content.
+        retries (int): Number of retry attempts.
+        backoff (int): The initial delay between retries (exponential backoff).
+        
+    Returns:
+        str: The response from Gemini or a fallback message.
+    """
     try:
-        print("\n ==> Master: ", query)
+        # Call the original gemini_response function to get the response from Gemini API
+        response = gemini_response(input)
+        return response
+    
+    except ResourceExhausted as e:
+        # If ResourceExhausted error occurs, retry with exponential backoff
+        if retries > 0:
+            print(f"Rate limit exceeded. Retrying in {backoff} seconds...")
+            time.sleep(backoff)  # Wait before retrying
+            return gemini_response_with_retry(input, retries - 1, backoff * 2)  # Exponential backoff
+        else:
+            # If max retries are reached, return a fallback message
+            print("Max retries reached. Please try again later.")
+            return "Service temporarily unavailable. Please try again later."
 
-        # Handle queries for current time and today's date
+def rudra(query):
+    """
+    Function to process user queries and return a response from Gemini or specific commands.
+    
+    Args:
+        query (str): The user query or command.
+        
+    Returns:
+        str: The response to the user's query.
+    """
+    try:
+        print("\n ==> Master : ", query)
+
         if 'current time' in query or 'todays date' in query:
             if 'time' in query and 'date' in query:
                 time = datetime.datetime.now().strftime('%I:%M %p')
                 current_date = datetime.datetime.now().date()
-                return f'Current time is {time} and Todays date is {current_date}'
+                return 'Current time is ' + time + ' and ' + 'Todays date is ' + str(current_date)
             elif 'time' in query:
                 time = datetime.datetime.now().strftime('%I:%M %p')
-                return f'Current time is {time}'
+                return 'Current time is ' + time
             elif 'date' in query:
                 current_date = datetime.datetime.now().date()
-                return f'Todays date is {current_date}'
+                return 'Todays date is ' + str(current_date)
 
-        # Handle the open website command
         elif 'open website' in query:
             if ".com" in query or ".in" in query or ".org" in query or ".online" in query or ".io" in query:
-                openweb = query.replace("open", "").replace("website", "").strip()
+                openweb = query.replace("open", "")
+                openweb = openweb.replace("website", "")
                 webbrowser.open(openweb)
-                return f"Opening {openweb}"
+                return "opening " + openweb
             else:
-                return "Please specify a valid website. Example: open website youtube.com"
+                return "Please say command like this. (example-open website youtube.com )"
 
-        # Commented out pywhatkit-dependent code for playing song on YouTube
-        # elif 'play on youtube' in query:
-        #     song = query.replace("play", "").replace("on youtube", "").strip()
-        #     pywhatkit.playonyt(song)
-        #     return "Playing your song on YouTube."
+        elif 'play on youtube' in query:
+            song = query.replace("play", "")
+            song = song.replace("on youtube", "")
+            return f"Playing {song} on YouTube."
 
-        # Default response for unrecognized commands
         elif not query:
-            return "Please enter a command or ask a question."
+            return "Please say command again.."
 
-        # If the query is valid, pass it to Gemini API for processing
         else:
-            response = gemini_response(query)
+            # Use gemini_response_with_retry function to handle retries on failure
+            response = gemini_response_with_retry(query)
             return response
 
     except Exception as e:
-        print(f"Error: {e}")
-        return "An error occurred while processing your request."
+        return f"An error occurred: {str(e)}"
 
-# Main function to handle Streamlit interface
 def main():
+    """
+    Main function to drive the Streamlit app.
+    """
     st.title("Rudra AI")
 
-    # Sidebar for image upload
     st.sidebar.title("ASK TO IMAGE")
     uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-    # Initialize session state for messages if not already done
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Instruction to start the chat (prompt for the AI)
-    prompt = """Hey Rudra, I am Sahil. Your task is to serve my queries, or talk with me. [Instruction for you purpose only: 
-                Please sometimes answer in only a single line and sometimes answer briefly in a point-wise format 
-                according to the query. Answer only in English. You can also open any websites on the internet. 
-                For example, you can respond to the command [open website youtube.com] or play a song with [play on youtube 'song'].
-                Please respond to the command [what is current time] to know the current time, and [what is today's date] to know today's date.]"""
-    
-    # Get the first response based on the prompt
-    first_response = gemini_response(prompt)
+    prompt = "Hey Rudra, I am Sahil. Your task is to serve my queries or talk with me. [Instruction: Please answer sometimes in a single line and sometimes briefly in points based on the query.]"
+
+    first_response = gemini_response_with_retry(prompt)
+
     with st.chat_message('assistant'):
         st.markdown(first_response)
 
-    # Display previous messages from the chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Handle image upload and interaction
     if uploaded_image is not None:
         image = Image.open(uploaded_image)
         st.title("Rudra Image AI")
         st.image(image, caption="Uploaded Image")
         st.sidebar.write("Remove image to go back to Rudra AI")
 
-        # Process user input for image-based queries
         if prompt := st.chat_input("Ask to image"):
             prompt = prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
+
             with st.chat_message("user"):
                 st.markdown(prompt)
+
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 response = gemini_IMGresponse(prompt, image)
                 message_placeholder.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
-    
-    # Handle text-based queries for AI
+
     else:
         if prompt := st.chat_input("Ask Rudra"):
             prompt = prompt.lower()
             st.session_state.messages.append({"role": "user", "content": prompt})
+
             with st.chat_message("user"):
                 st.markdown(prompt)
+
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 response = rudra(prompt)
