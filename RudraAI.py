@@ -112,4 +112,4 @@ def main():
         st.error("An unexpected error occurred. Please try again later.",str(e))
 
 if __name__ == "__main__":
-    main(),add this into above code
+    main()
