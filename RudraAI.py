@@ -33,9 +33,18 @@ def main():
         st.sidebar.title("Rudra AI Assistant")
         current_mode = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image", "Chat with PDF"))
 
+        
         # --- Chat Mode ---
         if current_mode == "Chat":
             st.title("Rudra AI Chat")
+            Initial_prompt='''hey from now you are Rudra the personal AI assistant, I am Sahil your developer, your task is to serve my queries, or talk with me,
+            and your "ask to image" feature, powers you to interact with images,and you also has chat with pdf feature, okay so hii Rudra [reply with 2-3 lines only]'''
+    
+            first_response=gemini_response(Initial_prompt)
+
+            with st.chat_message('assistant'):
+                st.markdown(first_response)
+
             for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
