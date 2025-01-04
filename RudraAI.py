@@ -8,12 +8,15 @@ create_chat()
 # Function to handle chat-based interaction with error handling
 def rudra(query):
     try:
-        if 'open website' in query:
-            if ".com" in query or ".in" in query or ".org" in query or ".online" in query or ".io" in query:
-                openweb = query.replace("open", "")
-                openweb = openweb.replace("website", "")
-                webbrowser.open(openweb)
-                return "Opening " + openweb
+       if 'open website' in query:
+            # Remove 'open' and 'website' from the query and strip any extra spaces
+            openweb = query.replace("open", "").replace("website", "").strip()
+            # Add 'https://' if not already present
+            if not openweb.startswith(("http://", "https://")):
+                openweb = "https://" + openweb
+            webbrowser.open(openweb)
+            return f"Opening {openweb}"
+            
             else:
                 return "Please specify the website (e.g., open website youtube.com)"
 
@@ -39,7 +42,7 @@ def main():
             # Chat prompt
             # prompt = "Hey Rudra, I am Sahil, your task is to serve my queries or talk with me."
             Initial_prompt='''hey Rudra, I am Sahil your developer, your task is to serve my queries, or talk with me,
-            you can also open any webpages on the internet, and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with few lines only]'''
+            you can also open any webpages on the internet, and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with 2-3 lines only]'''
             
             first_response = gemini_response(Initial_prompt)
 
