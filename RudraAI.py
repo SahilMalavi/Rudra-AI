@@ -35,19 +35,29 @@ def main():
 
         
         # --- Chat Mode ---
-        if current_mode == "Chat":
+       if current_mode == "Chat":
             st.title("Rudra AI Chat")
-            Initial_prompt='''hey from now you are Rudra the personal AI assistant, I am Sahil your developer, your task is to serve my queries, or talk with me,
-            and your "ask to image" feature, powers you to interact with images,and you also has chat with pdf feature, okay so hii Rudra [reply with 2-3 lines only]'''
-    
-            first_response=gemini_response(Initial_prompt)
+            Initial_prompt = '''Hey, from now you are Rudra, the personal AI assistant. I am Sahil, your developer. 
+            Your task is to serve my queries, or talk with me. Your "ask to image" feature powers you to interact with images, 
+            and you also have the "chat with PDF" feature. Okay, so hii Rudra! [Reply with 2-3 lines only]'''
 
+            # Generate the first response with the initial prompt
+            first_response = gemini_response(Initial_prompt)
+
+            # Display the initial response
             with st.chat_message('assistant'):
                 st.markdown(first_response)
 
+            # Display previous chat messages if any
+            if 'chat_messages' not in st.session_state:
+                st.session_state.chat_messages = []
+
+            # Show the conversation history
             for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
+
+            # User input handling
             if prompt := st.chat_input("Ask Rudra"):
                 st.session_state.chat_messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user"):
@@ -56,7 +66,7 @@ def main():
                     response = gemini_response(prompt)
                     st.markdown(response)
                 st.session_state.chat_messages.append({"role": "assistant", "content": response})
-
+                
         # --- Ask to Image Mode ---
         elif current_mode == "Ask to Image":
             st.title("Rudra Image AI")
