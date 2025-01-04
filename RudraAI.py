@@ -42,16 +42,23 @@ create_chat()
 # Main Streamlit app function 
 def main():
     try:
-        st.title("Rudra AI")
 
         # Radio button in the sidebar to choose between chat and ask to image
         choice = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image"), index=0)  # Default to "Chat"
 
         if choice == "Chat":
+            st.title("Rudra AI")
             st.sidebar.title("Chat with Rudra")
             # Chat prompt
-            prompt = "Hey Rudra, I am Sahil, your task is to serve my queries or talk with me."
-            first_response = gemini_response(prompt)
+            # prompt = "Hey Rudra, I am Sahil, your task is to serve my queries or talk with me."
+            Initial_prompt='''hey Rudra, i am Sahil, your task is to serve my query's, or talk with me,
+            [instruction for you purpose only: please sometime answer in only single line and sometime answer briefly point wise according to the query,in english 
+            only, you can also able to open any webpages on the internet, you only tell user to enter [open website youtube.com] this command, 
+            play any song on youtube when user enter command [play on youtube],you only tell user to enter [play on youtube 'song'] this command.
+            only tell user to enter [what is current time] this command to know current time,only tell user to enter [what is todays date] this command, 
+            to know todays date],okay so hii rudra'''
+            
+            first_response = gemini_response(Initial_prompt)
 
             # Display initial assistant message
             with st.chat_message('assistant'):
