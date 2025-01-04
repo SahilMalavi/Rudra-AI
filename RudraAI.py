@@ -14,29 +14,30 @@ def extract_text_from_pdf(uploaded_file):
             text += page_text + "\n"
     return text
 
+# Initialize session state only once
+if "chat_messages" not in st.session_state:
+    st.session_state.chat_messages = []
+if "pdf_messages" not in st.session_state:
+    st.session_state.pdf_messages = []
+if "pdf_text" not in st.session_state:
+    st.session_state.pdf_text = ""
+if "image_messages" not in st.session_state:
+    st.session_state.image_messages = []
+
 # Main Streamlit app function
 def main():
     try:
         st.sidebar.title("Rudra AI Assistant")
 
-        # Mode selection
-        choice = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image", "Chat with PDF"), index=0)  # Default is "Chat"
+        # Mode selection with unique keys to avoid overlap
+        choice = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image", "Chat with PDF"))
 
+        # --- Chat Mode ---
         if choice == "Chat":
             st.title("Rudra AI Chat")
             st.sidebar.title("Chat with Rudra")
-            Initial_prompt='''hey Rudra, I am Sahil your developer, your task is to serve my queries, or talk with me,
-            and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with 2-3 lines only]'''
-            
-            # Display initial assistant message
-            with st.chat_message('assistant'):
-                st.markdown(Initial_prompt)
 
-            # Separate session state for chat mode
-            if "chat_messages" not in st.session_state:
-                st.session_state.chat_messages = []
-
-            # Collect and display chat messages for chat mode
+            # Display previous chat messages
             for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
@@ -51,16 +52,22 @@ def main():
                     st.markdown(response)
                 st.session_state.chat_messages.append({"role": "assistant", "content": response})
 
+        # --- Ask to Image Mode ---
         elif choice == "Ask to Image":
             st.title("Rudra Image AI")
-            st.sidebar.title("Ask to Image")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
             if uploaded_image:
                 image = Image.open(uploaded_image)
                 st.image(image, caption="Uploaded Image")
 
-                if prompt := st.chat_input("Ask to Image"):
+                # Display previous image-based messages
+                for message in st.session_state.image_messages:
+                    with st.chat_message(message["role"]):
+                        st.markdown(message["content"])
+
+                if prompt := st.chat_input("Ask about the image"):
+                    st.session_state.image_messages.append({"role": "user", "content": prompt})
                     with st.chat_message("user"):
                         st.markdown(prompt)
                     with st.chat_message("assistant"):
@@ -68,41 +75,40 @@ def main():
                             response = gemini_IMGresponse(prompt, image)
                             st.markdown(response)
                         except Exception as e:
-                            st.markdown(f"Error: {str(e)}")
+                            response = f"Error: {str(e)}"
+                            st.error(response)
+                        st.session_state.image_messages.append({"role": "assistant", "content": response})
 
+        # --- Chat with PDF Mode ---
         elif choice == "Chat with PDF":
             st.title("Chat with PDF")
             uploaded_pdf = st.sidebar.file_uploader("Upload a PDF", type=["pdf"])
-            pdf_text = ""
 
-            if uploaded_pdf:
-                pdf_text = extract_text_from_pdf(uploaded_pdf)
-                st.sidebar.success("PDF uploaded successfully!")
+            # Load PDF content once and store in session state
+            if uploaded_pdf and st.session_state.pdf_text == "":
+                st.session_state.pdf_text = extract_text_from_pdf(uploaded_pdf)
 
-                # Separate session state for PDF chat mode
-                if "pdf_messages" not in st.session_state:
-                    st.session_state.pdf_messages = []
+            # Display previous PDF chat messages
+            for message in st.session_state.pdf_messages:
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
 
-                # Display previous messages for PDF chat mode
-                for message in st.session_state.pdf_messages:
-                    with st.chat_message(message["role"]):
-                        st.markdown(message["content"])
-
+            # If PDF is uploaded and chat is active
+            if st.session_state.pdf_text:
                 if prompt := st.chat_input("Ask Rudra about the PDF"):
                     st.session_state.pdf_messages.append({"role": "user", "content": prompt})
                     with st.chat_message("user"):
                         st.markdown(prompt)
                     with st.chat_message("assistant"):
-                        combined_prompt = f"Based on the provided PDF content:\n{pdf_text}\n\n{prompt}"
+                        combined_prompt = f"Based on the PDF content:\n{st.session_state.pdf_text}\n\n{prompt}"
                         response = gemini_response(combined_prompt)
                         st.markdown(response)
                     st.session_state.pdf_messages.append({"role": "assistant", "content": response})
             else:
-                st.warning("Please upload a PDF file to start chatting with it.")
+                st.warning("Please upload a PDF to start chatting.")
 
     except Exception as e:
-        print(f"Error in main function: {str(e)}")
-        st.error(f"An unexpected error occurred. Please try again later. {str(e)}")
+        st.error(f"An unexpected error occurred: {str(e)}")
 
 if __name__ == "__main__":
     main()
