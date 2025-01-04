@@ -9,18 +9,18 @@ create_chat()
 # Function to handle chat-based interaction with error handling
 def rudra(query):
     try:
-        print("\n ==> Master : ", query)
-        if 'current time' in query or 'todays date' in query:
-            if 'time' in query and 'date' in query:
-                time = datetime.datetime.now().strftime('%I:%M %p')
-                current_date = datetime.datetime.now().date()
-                return 'Current time is ' + time + ' and ' + 'Todays date is ' + str(current_date)
-            elif 'time' in query:
-                time = datetime.datetime.now().strftime('%I:%M %p')
-                return 'Current time is ' + time
-            elif 'date' in query:
-                current_date = datetime.datetime.now().date()
-                return 'Todays date is ' + str(current_date)
+    #     print("\n ==> Master : ", query)
+    #     if 'current time' in query or 'todays date' in query:
+    #         if 'time' in query and 'date' in query:
+    #             time = datetime.datetime.now().strftime('%I:%M %p')
+    #             current_date = datetime.datetime.now().date()
+    #             return 'Current time is ' + time + ' and ' + 'Todays date is ' + str(current_date)
+    #         elif 'time' in query:
+    #             time = datetime.datetime.now().strftime('%I:%M %p')
+    #             return 'Current time is ' + time
+    #         elif 'date' in query:
+    #             current_date = datetime.datetime.now().date()
+    #             return 'Todays date is ' + str(current_date)
 
         elif 'open website' in query:
             if ".com" in query or ".in" in query or ".org" in query or ".online" in query or ".io" in query:
@@ -32,7 +32,7 @@ def rudra(query):
                 return "Please specify the website (e.g., open website youtube.com)"
 
         elif not query:
-            return "Please say your command again."
+            return "Please write your command again."
         else:
             response = gemini_response(query)
             return response
@@ -107,7 +107,7 @@ def main():
 
     except Exception as e:
         print(f"Error in main function: {str(e)}")
-        st.error("An unexpected error occurred. Please try again later.")
+        st.error("An unexpected error occurred. Please try again later.",str(e))
 
 if __name__ == "__main__":
     main()
