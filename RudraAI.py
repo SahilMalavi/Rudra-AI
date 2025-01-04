@@ -42,8 +42,10 @@ def main():
             Your task is to serve queries and assist with various tasks. You have the "ask to image" feature that allows you to interact with images, 
             and the "chat with PDF" feature to help with document-based queries. 
             
-            When interacting with the user, always greet them politely and professionally, but avoid informal greetings like "hi Sahil" or anything similar. 
-            For example, start with something like "Hello, how can I assist you today?" or a similar professional greeting.'''
+            When interacting with the user, always start with the greeting: "Hello, how can I assist you today?" 
+            Ensure that this is your first message, and avoid informal greetings like "hi Sahil" or anything similar. 
+            This greeting should remain consistent each time you start an interaction with the user.'''
+
 
             # Generate the first response with the initial prompt
             first_response = gemini_response(Initial_prompt)
