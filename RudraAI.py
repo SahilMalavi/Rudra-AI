@@ -6,29 +6,33 @@ from gemini import gemini_response, gemini_IMGresponse, create_chat
 create_chat()
 
 # Function to handle chat-based interaction with error handling
+import webbrowser
+
 def rudra(query):
     try:
-        if 'open website' in query:
-            # Remove 'open' and 'website' from the query and strip any extra spaces
-            openweb = query.replace("open", "").replace("website", "").strip()
-            # Add 'https://' if not already present
-            if not openweb.startswith(("http://", "https://")):
-                openweb = "https://" + openweb
-            webbrowser.open(openweb)
-            return f"Opening {openweb}"
+        query = query.strip().lower()  # Normalize the query
+        if query.startswith("open website"):
+            # Extract the part after "open website"
+            openweb = query[len("open website"):].strip()
+            # Ensure the user has specified a valid URL
+            if openweb:
+                # Add 'https://' if not already present
+                if not openweb.startswith(("http://", "https://")):
+                    openweb = "https://" + openweb
+                webbrowser.open(openweb)
+                return f"Opening {openweb}"
+            else:
+                return "Please specify a valid website (e.g., 'open website youtube.com')"
 
         elif not query:
             return "Please write your command again."
-
         else:
             response = gemini_response(query)
             return response
-
     except Exception as e:
         print(f"Error in rudra function: {str(e)}")
         return "An error occurred while processing your query. Please try again later. " + str(e)
-
-
+        
 # Main Streamlit app function 
 def main():
     try:
