@@ -17,7 +17,7 @@ def to_markdown(text):
 ai.configure(api_key="AIzaSyCvhpNhCsZkxnR2bie-RM6U5EcPGJYsYbU")
 
 def create_chat():
-    model = ai.GenerativeModel('gemini-pro')
+    model = ai.GenerativeModel('gemini-1.5-flash')
     chat = model.start_chat(history=[])
     return chat
 
