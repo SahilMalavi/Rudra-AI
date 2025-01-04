@@ -42,6 +42,7 @@ def rudra(query):
 # Main Streamlit app function 
 def main():
     try:
+
         # Radio button in the sidebar to choose between chat and ask to image
         choice = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image"), index=0)  # Default to "Chat"
 
@@ -49,8 +50,9 @@ def main():
             st.title("Rudra AI")
             st.sidebar.title("Chat with Rudra")
             # Chat prompt
+            # prompt = "Hey Rudra, I am Sahil, your task is to serve my queries or talk with me."
             Initial_prompt='''hey Rudra, I am Sahil your developer, your task is to serve my queries, or talk with me,
-            you can also open any webpages on the internet, and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with 2-3 lines only]'''
+            and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with 2-3 lines only]'''
             
             first_response = gemini_response(Initial_prompt)
 
@@ -77,13 +79,6 @@ def main():
                     response = rudra(prompt)
                     message_placeholder.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
-
-            # Add a button for opening websites
-            st.sidebar.subheader("Open a Website")
-            website_input = st.sidebar.text_input("Enter website URL (e.g., youtube.com)")
-            if st.sidebar.button("Open Website"):
-                result = rudra(f"open website {website_input}")
-                st.sidebar.success(result)
 
         elif choice == "Ask to Image":
             st.title("Rudra Image AI")
@@ -114,7 +109,7 @@ def main():
 
     except Exception as e:
         print(f"Error in main function: {str(e)}")
-        st.error("An unexpected error occurred. Please try again later.")
+        st.error("An unexpected error occurred. Please try again later.",str(e))
 
 if __name__ == "__main__":
-    main()
+    main(),add this into above code
