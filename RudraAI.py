@@ -35,7 +35,7 @@ def main():
 
         
         # --- Chat Mode ---
-       if current_mode == "Chat":
+        if current_mode == "Chat":
             st.title("Rudra AI Chat")
             Initial_prompt = '''Hey, from now you are Rudra, the personal AI assistant. I am Sahil, your developer. 
             Your task is to serve my queries, or talk with me. Your "ask to image" feature powers you to interact with images, 
