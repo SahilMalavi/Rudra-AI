@@ -27,10 +27,12 @@ def main():
             st.sidebar.title("Chat with Rudra")
             Initial_prompt='''hey Rudra, I am Sahil your developer, your task is to serve my queries, or talk with me,
             and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with 2-3 lines only]'''
-            
+
+            first_responce = gemini_response(Initial_prompt)
+
             # Display initial assistant message
             with st.chat_message('assistant'):
-                st.markdown(Initial_prompt)
+                st.markdown(first_responce)
 
             if "messages" not in st.session_state:
                 st.session_state.messages = []
