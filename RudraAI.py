@@ -14,13 +14,15 @@ def extract_text_from_pdf(uploaded_file):
             text += page_text + "\n"
     return text
 
-# Initialize session state only once
+# Initialize session state variables only once
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = []
 if "pdf_messages" not in st.session_state:
     st.session_state.pdf_messages = []
 if "pdf_text" not in st.session_state:
     st.session_state.pdf_text = ""
+if "pdf_uploaded" not in st.session_state:
+    st.session_state.pdf_uploaded = None  # Tracks the uploaded PDF state
 if "image_messages" not in st.session_state:
     st.session_state.image_messages = []
 
@@ -29,20 +31,20 @@ def main():
     try:
         st.sidebar.title("Rudra AI Assistant")
 
-        # Mode selection with unique keys to avoid overlap
-        choice = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image", "Chat with PDF"))
+        # Track previous mode and reset when switching modes
+        current_mode = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image", "Chat with PDF"))
+        if "previous_mode" not in st.session_state or st.session_state.previous_mode != current_mode:
+            st.session_state.previous_mode = current_mode
+            if current_mode == "Chat with PDF":
+                st.session_state.pdf_text = ""  # Clear PDF data on mode switch
+                st.session_state.pdf_uploaded = None  # Reset uploaded PDF
 
         # --- Chat Mode ---
-        if choice == "Chat":
+        if current_mode == "Chat":
             st.title("Rudra AI Chat")
-            st.sidebar.title("Chat with Rudra")
-
-            # Display previous chat messages
             for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
-
-            # Handle user input for chat mode
             if prompt := st.chat_input("Ask Rudra"):
                 st.session_state.chat_messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user"):
@@ -53,47 +55,41 @@ def main():
                 st.session_state.chat_messages.append({"role": "assistant", "content": response})
 
         # --- Ask to Image Mode ---
-        elif choice == "Ask to Image":
+        elif current_mode == "Ask to Image":
             st.title("Rudra Image AI")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-
             if uploaded_image:
                 image = Image.open(uploaded_image)
                 st.image(image, caption="Uploaded Image")
-
-                # Display previous image-based messages
                 for message in st.session_state.image_messages:
                     with st.chat_message(message["role"]):
                         st.markdown(message["content"])
-
                 if prompt := st.chat_input("Ask about the image"):
                     st.session_state.image_messages.append({"role": "user", "content": prompt})
                     with st.chat_message("user"):
                         st.markdown(prompt)
                     with st.chat_message("assistant"):
-                        try:
-                            response = gemini_IMGresponse(prompt, image)
-                            st.markdown(response)
-                        except Exception as e:
-                            response = f"Error: {str(e)}"
-                            st.error(response)
-                        st.session_state.image_messages.append({"role": "assistant", "content": response})
+                        response = gemini_IMGresponse(prompt, image)
+                        st.markdown(response)
+                    st.session_state.image_messages.append({"role": "assistant", "content": response})
 
         # --- Chat with PDF Mode ---
-        elif choice == "Chat with PDF":
+        elif current_mode == "Chat with PDF":
             st.title("Chat with PDF")
+
+            # File uploader with reset handling
             uploaded_pdf = st.sidebar.file_uploader("Upload a PDF", type=["pdf"])
-
-            # Load PDF content once and store in session state
-            if uploaded_pdf and st.session_state.pdf_text == "":
+            if uploaded_pdf and uploaded_pdf != st.session_state.pdf_uploaded:
+                st.session_state.pdf_uploaded = uploaded_pdf
                 st.session_state.pdf_text = extract_text_from_pdf(uploaded_pdf)
+                st.session_state.pdf_messages = []  # Reset chat for new PDF
 
-            # Display previous PDF chat messages
+            # Display PDF chat history
             for message in st.session_state.pdf_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
 
-            # If PDF is uploaded and chat is active
+            # Handle PDF-based conversation
             if st.session_state.pdf_text:
                 if prompt := st.chat_input("Ask Rudra about the PDF"):
                     st.session_state.pdf_messages.append({"role": "user", "content": prompt})
