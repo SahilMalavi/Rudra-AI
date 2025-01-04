@@ -2,13 +2,12 @@ import streamlit as st
 from PIL import Image
 import webbrowser
 from gemini import gemini_response, gemini_IMGresponse, create_chat
-import datetime
 
 create_chat()
 
 # Function to handle chat-based interaction with error handling
-def rudra(query):
-    try:
+# def rudra(query):
+    # try:
     #     print("\n ==> Master : ", query)
     #     if 'current time' in query or 'todays date' in query:
     #         if 'time' in query and 'date' in query:
@@ -22,25 +21,25 @@ def rudra(query):
     #             current_date = datetime.datetime.now().date()
     #             return 'Todays date is ' + str(current_date)
 
-        elif 'open website' in query:
-            if ".com" in query or ".in" in query or ".org" in query or ".online" in query or ".io" in query:
-                openweb = query.replace("open", "")
-                openweb = openweb.replace("website", "")
-                webbrowser.open(openweb)
-                return "Opening " + openweb
-            else:
-                return "Please specify the website (e.g., open website youtube.com)"
+#         elif 'open website' in query:
+#             if ".com" in query or ".in" in query or ".org" in query or ".online" in query or ".io" in query:
+#                 openweb = query.replace("open", "")
+#                 openweb = openweb.replace("website", "")
+#                 webbrowser.open(openweb)
+#                 return "Opening " + openweb
+#             else:
+#                 return "Please specify the website (e.g., open website youtube.com)"
 
-        elif not query:
-            return "Please write your command again."
-        else:
-            response = gemini_response(query)
-            return response
-    except Exception as e:
-        print(f"Error in rudra function: {str(e)}")
-        return "An error occurred while processing your query. Please try again later."
+#         elif not query:
+#             return "Please write your command again."
+#         else:
+#             response = gemini_response(query)
+#             return response
+#     except Exception as e:
+#         print(f"Error in rudra function: {str(e)}")
+#         return "An error occurred while processing your query. Please try again later."
 
-# Main Streamlit app function with error handling
+# Main Streamlit app function 
 def main():
     try:
         st.title("Rudra AI")
