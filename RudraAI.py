@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-import webbrowser
 from gemini import gemini_response, gemini_IMGresponse, create_chat
 from PyPDF2 import PdfReader
 
