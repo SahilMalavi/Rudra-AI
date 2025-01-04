@@ -39,7 +39,7 @@ def main():
             # Chat prompt
             # prompt = "Hey Rudra, I am Sahil, your task is to serve my queries or talk with me."
             Initial_prompt='''hey Rudra, I am Sahil your developer, your task is to serve my queries, or talk with me,
-            you can also open any webpages on the internet, and your "ask to image" feature, powers you to interact with images,okay so hii Rudra'''
+            you can also open any webpages on the internet, and your "ask to image" feature, powers you to interact with images, okay so hii Rudra [reply with few lines only]'''
             
             first_response = gemini_response(Initial_prompt)
 
