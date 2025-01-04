@@ -20,9 +20,9 @@ def rudra(query):
             else:
                 return "Please specify the website (e.g., open website youtube.com)"
 
-        elif not query:
+       elif not query:
             return "Please write your command again."
-        else:
+       else:
             response = gemini_response(query)
             return response
     except Exception as e:
