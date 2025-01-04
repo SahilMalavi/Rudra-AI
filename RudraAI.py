@@ -73,7 +73,7 @@ def main():
                     st.markdown(prompt)
                 with st.chat_message("assistant"):
                     message_placeholder = st.empty()
-                    response = rudra(prompt)
+                    response = gemini_response(query)
                     message_placeholder.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
 
