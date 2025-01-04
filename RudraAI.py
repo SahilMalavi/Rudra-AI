@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-import webbrowser
 from gemini import gemini_response, gemini_IMGresponse, create_chat
 from PyPDF2 import PdfReader
 
@@ -33,23 +32,24 @@ def main():
             with st.chat_message('assistant'):
                 st.markdown(Initial_prompt)
 
-            if "messages" not in st.session_state:
-                st.session_state.messages = []
+            # Separate session state for chat mode
+            if "chat_messages" not in st.session_state:
+                st.session_state.chat_messages = []
 
-            # Collect and display chat messages
-            for message in st.session_state.messages:
+            # Collect and display chat messages for chat mode
+            for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
 
-            # Handle user input
+            # Handle user input for chat mode
             if prompt := st.chat_input("Ask Rudra"):
-                st.session_state.messages.append({"role": "user", "content": prompt})
+                st.session_state.chat_messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user"):
                     st.markdown(prompt)
                 with st.chat_message("assistant"):
                     response = gemini_response(prompt)
                     st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                st.session_state.chat_messages.append({"role": "assistant", "content": response})
 
         elif choice == "Ask to Image":
             st.title("Rudra Image AI")
@@ -79,23 +79,24 @@ def main():
                 pdf_text = extract_text_from_pdf(uploaded_pdf)
                 st.sidebar.success("PDF uploaded successfully!")
 
-                if "messages" not in st.session_state:
-                    st.session_state.messages = []
+                # Separate session state for PDF chat mode
+                if "pdf_messages" not in st.session_state:
+                    st.session_state.pdf_messages = []
 
-                # Display previous messages if any
-                for message in st.session_state.messages:
+                # Display previous messages for PDF chat mode
+                for message in st.session_state.pdf_messages:
                     with st.chat_message(message["role"]):
                         st.markdown(message["content"])
 
                 if prompt := st.chat_input("Ask Rudra about the PDF"):
-                    st.session_state.messages.append({"role": "user", "content": prompt})
+                    st.session_state.pdf_messages.append({"role": "user", "content": prompt})
                     with st.chat_message("user"):
                         st.markdown(prompt)
                     with st.chat_message("assistant"):
                         combined_prompt = f"Based on the provided PDF content:\n{pdf_text}\n\n{prompt}"
                         response = gemini_response(combined_prompt)
                         st.markdown(response)
-                    st.session_state.messages.append({"role": "assistant", "content": response})
+                    st.session_state.pdf_messages.append({"role": "assistant", "content": response})
             else:
                 st.warning("Please upload a PDF file to start chatting with it.")
 
