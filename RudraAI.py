@@ -20,11 +20,13 @@ if "chat_messages" not in st.session_state:
 if "pdf_messages" not in st.session_state:
     st.session_state.pdf_messages = []
 if "pdf_text" not in st.session_state:
-    st.session_state.pdf_text = None  # None indicates no PDF uploaded
+    st.session_state.pdf_text = None
 if "pdf_uploaded" not in st.session_state:
     st.session_state.pdf_uploaded = None
 if "image_messages" not in st.session_state:
     st.session_state.image_messages = []
+if "image_uploaded" not in st.session_state:
+    st.session_state.image_uploaded = None
 
 def main():
     try:
@@ -50,8 +52,21 @@ def main():
         elif current_mode == "Ask to Image":
             st.title("Rudra Image AI")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-            if uploaded_image:
-                image = Image.open(uploaded_image)
+
+            # Prevent resetting on mode switch
+            if uploaded_image and uploaded_image != st.session_state.image_uploaded:
+                st.session_state.image_uploaded = uploaded_image
+                st.session_state.image_messages = []  # Clear chat for new image
+
+            # Clear Image Button
+            if st.session_state.image_uploaded and st.sidebar.button("❌ Clear Image"):
+                st.session_state.image_uploaded = None
+                st.session_state.image_messages = []
+                st.warning("Image Removed!")
+
+            # Display Image and Handle Chat
+            if st.session_state.image_uploaded:
+                image = Image.open(st.session_state.image_uploaded)
                 st.image(image, caption="Uploaded Image")
                 for message in st.session_state.image_messages:
                     with st.chat_message(message["role"]):
@@ -64,36 +79,33 @@ def main():
                         response = gemini_IMGresponse(prompt, image)
                         st.markdown(response)
                     st.session_state.image_messages.append({"role": "assistant", "content": response})
+            else:
+                st.warning("Please upload an image to start chatting.")
 
         # --- Chat with PDF Mode ---
         elif current_mode == "Chat with PDF":
             st.title("Chat with PDF")
-
-            # File uploader and persist the PDF
             uploaded_pdf = st.sidebar.file_uploader("Upload a PDF", type=["pdf"])
 
-            # Only process new PDFs
+            # Only process a new PDF
             if uploaded_pdf and uploaded_pdf != st.session_state.pdf_uploaded:
                 st.session_state.pdf_uploaded = uploaded_pdf
                 st.session_state.pdf_text = extract_text_from_pdf(uploaded_pdf)
-                st.session_state.pdf_messages = []  # Clear chat for the new PDF
-                st.success("PDF Uploaded Successfully!")
+                st.session_state.pdf_messages = []
 
-            # Clear PDF button
+            # Clear PDF Button
             if st.session_state.pdf_text and st.sidebar.button("❌ Clear PDF"):
                 st.session_state.pdf_uploaded = None
                 st.session_state.pdf_text = None
                 st.session_state.pdf_messages = []
                 st.warning("PDF Removed!")
 
-            # Show PDF chat if a PDF exists
+            # Display PDF Chat
             if st.session_state.pdf_text:
                 st.info("✅ PDF loaded. Ask questions below.")
                 for message in st.session_state.pdf_messages:
                     with st.chat_message(message["role"]):
                         st.markdown(message["content"])
-
-                # Handle PDF-based conversation
                 if prompt := st.chat_input("Ask Rudra about the PDF"):
                     st.session_state.pdf_messages.append({"role": "user", "content": prompt})
                     with st.chat_message("user"):
