@@ -1,6 +1,3 @@
 pywhatkit
 streamlit
 PyPDF2
-webbrowser
-google.generativeai
-IPython
