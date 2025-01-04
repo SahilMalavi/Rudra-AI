@@ -4,12 +4,6 @@ import webbrowser
 from gemini import gemini_response, gemini_IMGresponse, create_chat
 
 create_chat()
-
-# Function to handle chat-based interaction with error handling
-import webbrowser
-
-import webbrowser
-
 def rudra(query):
     try:
         query = query.strip().lower()  # Normalize the query
