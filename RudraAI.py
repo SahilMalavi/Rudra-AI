@@ -27,9 +27,8 @@ if "image_messages" not in st.session_state:
     st.session_state.image_messages = []
 if "image_uploaded" not in st.session_state:
     st.session_state.image_uploaded = None
-if "first_chat" not in st.session_state:
-    st.session_state.first_chat = True
-
+if "greeted" not in st.session_state:
+    st.session_state.greeted = False
 def main():
     try:
         st.sidebar.title("Rudra AI Assistant")
@@ -39,13 +38,15 @@ def main():
         if current_mode == "Chat":
             st.title("Rudra AI Chat")
             
-            if st.session_state.first_chat:
-                Initial_prompt = '''Hey, from now you are Rudra, the personal AI assistant. You are aware that your developer's name is Sahil Malavi. 
+            Initial_prompt = '''Hey, from now you are Rudra, the personal AI assistant. You are aware that your developer's name is Sahil Malavi. 
                 Your task is to serve queries and assist with various tasks.'''
-                first_response = gemini_response(Initial_prompt)
-                st.session_state.chat_messages.append({"role": "assistant", "content": first_response})
-                st.session_state.first_chat = False
-
+            response = gemini_response(Initial_prompt)
+            
+            if not st.session_state.greeted:
+                first_response = "Hello, how can I assist you today?"
+                with st.chat_message('assistant'):
+                    st.markdown(first_response)
+                st.session_state.greeted = True
             # Show conversation history
             for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
