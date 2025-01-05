@@ -47,7 +47,7 @@ def main():
             if not st.session_state.greeted:
                 first_response = "Hello, how can I assist you today?"
                 with st.chat_message('assistant'):
-                    st.markdown(first_response)
+                    #st.markdown(first_response)
                     st.session_state.chat_messages.append({"role": "assistant", "content": first_response})
                 st.session_state.greeted = True
                 
