@@ -27,38 +27,26 @@ if "image_messages" not in st.session_state:
     st.session_state.image_messages = []
 if "image_uploaded" not in st.session_state:
     st.session_state.image_uploaded = None
+if "first_chat" not in st.session_state:
+    st.session_state.first_chat = True
 
 def main():
     try:
         st.sidebar.title("Rudra AI Assistant")
         current_mode = st.sidebar.radio("Select Mode", ("Chat", "Ask to Image", "Chat with PDF"))
 
-        
         # --- Chat Mode ---
         if current_mode == "Chat":
             st.title("Rudra AI Chat")
             
-            Initial_prompt = '''Hey, from now you are Rudra, the personal AI assistant. You are aware that your developer's name is Sahil Malavi. 
-            Your task is to serve queries and assist with various tasks. You have the "ask to image" feature that allows you to interact with images, 
-            and the "chat with PDF" feature to help with document-based queries. 
-            
-            When interacting with the user, always start with the greeting: "Hello, how can I assist you today?" 
-            Ensure that this is your first message, and avoid informal greetings like "hi Sahil" or anything similar. 
-            This greeting should remain consistent each time you start an interaction with the user.'''
+            if st.session_state.first_chat:
+                Initial_prompt = '''Hey, from now you are Rudra, the personal AI assistant. You are aware that your developer's name is Sahil Malavi. 
+                Your task is to serve queries and assist with various tasks.'''
+                first_response = gemini_response(Initial_prompt)
+                st.session_state.chat_messages.append({"role": "assistant", "content": first_response})
+                st.session_state.first_chat = False
 
-
-            # Generate the first response with the initial prompt
-            first_response = gemini_response(Initial_prompt)
-
-            # Display the initial response
-            with st.chat_message('assistant'):
-                st.markdown(first_response)
-
-            # Display previous chat messages if any
-            if 'chat_messages' not in st.session_state:
-                st.session_state.chat_messages = []
-
-            # Show the conversation history
+            # Show conversation history
             for message in st.session_state.chat_messages:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
@@ -72,24 +60,20 @@ def main():
                     response = gemini_response(prompt)
                     st.markdown(response)
                 st.session_state.chat_messages.append({"role": "assistant", "content": response})
-                
+
         # --- Ask to Image Mode ---
         elif current_mode == "Ask to Image":
             st.title("Rudra Image AI")
             uploaded_image = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-            # Prevent resetting on mode switch
             if uploaded_image and uploaded_image != st.session_state.image_uploaded:
                 st.session_state.image_uploaded = uploaded_image
-                st.session_state.image_messages = []  # Clear chat for new image
+                st.session_state.image_messages = []
 
-            # Clear Image Button
             if st.session_state.image_uploaded and st.sidebar.button("❌ Clear Image"):
                 st.session_state.image_uploaded = None
                 st.session_state.image_messages = []
-                st.warning("Image Removed!")
 
-            # Display Image and Handle Chat
             if st.session_state.image_uploaded:
                 image = Image.open(st.session_state.image_uploaded)
                 st.image(image, caption="Uploaded Image")
@@ -104,28 +88,22 @@ def main():
                         response = gemini_IMGresponse(prompt, image)
                         st.markdown(response)
                     st.session_state.image_messages.append({"role": "assistant", "content": response})
-            else:
-                st.warning("Please upload an image to start chatting.")
 
         # --- Chat with PDF Mode ---
         elif current_mode == "Chat with PDF":
             st.title("Chat with PDF")
             uploaded_pdf = st.sidebar.file_uploader("Upload a PDF", type=["pdf"])
 
-            # Only process a new PDF
             if uploaded_pdf and uploaded_pdf != st.session_state.pdf_uploaded:
                 st.session_state.pdf_uploaded = uploaded_pdf
                 st.session_state.pdf_text = extract_text_from_pdf(uploaded_pdf)
                 st.session_state.pdf_messages = []
 
-            # Clear PDF Button
             if st.session_state.pdf_text and st.sidebar.button("❌ Clear PDF"):
                 st.session_state.pdf_uploaded = None
                 st.session_state.pdf_text = None
                 st.session_state.pdf_messages = []
-                st.warning("PDF Removed!")
 
-            # Display PDF Chat
             if st.session_state.pdf_text:
                 st.info("✅ PDF loaded. Ask questions below.")
                 for message in st.session_state.pdf_messages:
@@ -140,8 +118,6 @@ def main():
                         response = gemini_response(combined_prompt)
                         st.markdown(response)
                     st.session_state.pdf_messages.append({"role": "assistant", "content": response})
-            else:
-                st.warning("Please upload a PDF to start chatting.")
 
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
