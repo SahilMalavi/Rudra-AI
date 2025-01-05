@@ -48,10 +48,10 @@ def main():
                 first_response = "Hello, how can I assist you today?"
                 with st.chat_message('assistant'):
                     st.markdown(first_response)
+                    st.session_state.chat_messages.append({"role": "assistant", "content": first_response})
                 st.session_state.greeted = True
                 
             #store first response in chat   
-            st.session_state.chat_messages.append({"role": "assistant", "content": first_response})
             
             # Show conversation history
             for message in st.session_state.chat_messages:
