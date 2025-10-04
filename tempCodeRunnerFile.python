@@ -1,0 +1,55 @@
+import turtle
+
+# Create a turtle object
+t = turtle.Turtle()
+
+# Set the turtle's speed
+t.speed(100)
+
+# Set the turtle's pen size
+t.pensize(2)
+
+# Set the turtle's color
+t.color("black")
+
+# Move the turtle to the starting position
+t.penup()
+t.goto(-100, -100)
+t.pendown()
+
+# Draw the outline of the face
+for i in range(2):
+    t.forward(200)
+    t.left(90)
+    t.forward(100)
+    t.left(90)
+
+# Draw the eyes
+t.penup()
+t.goto(-50, -50)
+t.pendown()
+t.circle(50)
+t.penup()
+t.goto(50, -50)
+t.pendown()
+t.circle(50)
+
+# Draw the mouth
+t.penup()
+t.goto(0, -10)
+t.pendown()
+t.forward(100)
+t.left(90)
+t.forward(20)
+t.right(90)
+t.forward(100)
+t.right(90)
+t.forward(20)
+t.right(90)
+t.forward(100)
+
+# Hide the turtle
+t.hideturtle()
+
+# Keep the turtle window open
+turtle.done()
