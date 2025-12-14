@@ -14,7 +14,7 @@ def to_markdown(text):
     text = text.replace('•', '  *')
     return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-ai.configure(api_key="AIzaSyAP8M_8zf_Ks-KryXGSsXSEZlyL8wDocy0")
+ai.configure(api_key="AIzaSyCMWhW8Q_oBe7cqR3ZLPavwE3V_f0-zbAo") 
 
 def create_chat():
     model = ai.GenerativeModel('gemini-2.0-flash')
@@ -32,3 +32,4 @@ def gemini_IMGresponse(prompt, img):
     response = model.generate_content([prompt, img], stream=True)
     response.resolve()
     return response.text
+
