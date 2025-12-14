@@ -17,7 +17,7 @@ def to_markdown(text):
 ai.configure(api_key="AIzaSyCMWhW8Q_oBe7cqR3ZLPavwE3V_f0-zbAo") 
 
 def create_chat():
-    model = ai.GenerativeModel('gemini-2.0-flash')
+    model = ai.GenerativeModel('gemini-2.5-flash')
     chat = model.start_chat(history=[])
     return chat
 
@@ -32,4 +32,5 @@ def gemini_IMGresponse(prompt, img):
     response = model.generate_content([prompt, img], stream=True)
     response.resolve()
     return response.text
+
 
