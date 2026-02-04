@@ -1,5 +1,0 @@
-google.generativeai
-pywhatkit
-streamlit
-PyPDF2
-ipython

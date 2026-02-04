@@ -1,0 +1,16 @@
+@echo off
+echo Starting Rudra AI Assistant...
+
+echo Starting backend server...
+start cmd /k "cd /d S:\PROGRAMMING\VS Code\Python and notebook\PersonalAssistantRUDRA\backend && S:\PROGRAMMING\VS Code\Python and notebook\PersonalAssistantRUDRA\venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
+
+timeout /t 3 /nobreak > nul
+
+echo Starting frontend server...
+start cmd /k "cd /d S:\PROGRAMMING\VS Code\Python and notebook\PersonalAssistantRUDRA\frontend && npm run dev"
+
+echo Both servers are starting...
+echo Backend: http://localhost:8000
+echo Frontend: http://localhost:3000
+echo Press any key to exit...
+pause > nul
