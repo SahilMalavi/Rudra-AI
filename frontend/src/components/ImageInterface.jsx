@@ -3,10 +3,8 @@ import { Upload, Send, X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { chatAPI } from '../services/api';
 import MarkdownContent from './MarkdownContent';
 
-const ImageInterface = ({ messages, addMessage, clearMessages }) => {
+const ImageInterface = ({ messages, addMessage, clearMessages, uploadedImage, imagePreview, setImageFile, clearImageFile }) => {
     const [inputMessage, setInputMessage] = useState('');
-    const [uploadedImage, setUploadedImage] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [dragActive, setDragActive] = useState(false);
     const fileInputRef = useRef(null);
@@ -34,9 +32,10 @@ const ImageInterface = ({ messages, addMessage, clearMessages }) => {
                 return;
             }
 
-            setUploadedImage(file);
             const reader = new FileReader();
-            reader.onload = (e) => setImagePreview(e.target.result);
+            reader.onload = (e) => {
+                setImageFile(file, e.target.result, file.name);
+            };
             reader.onerror = () => alert('Error reading image file');
             reader.readAsDataURL(file);
             clearMessages();
@@ -70,9 +69,7 @@ const ImageInterface = ({ messages, addMessage, clearMessages }) => {
     };
 
     const handleRemoveImage = () => {
-        setUploadedImage(null);
-        setImagePreview(null);
-        clearMessages();
+        clearImageFile();
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }

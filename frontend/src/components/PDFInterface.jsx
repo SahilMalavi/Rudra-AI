@@ -3,10 +3,8 @@ import { Upload, Send, X, FileText, Loader2 } from 'lucide-react';
 import { chatAPI } from '../services/api';
 import MarkdownContent from './MarkdownContent';
 
-const PDFInterface = ({ messages, addMessage, clearMessages }) => {
+const PDFInterface = ({ messages, addMessage, clearMessages, uploadedPDF, pdfName, setPDFFile, clearPDFFile }) => {
     const [inputMessage, setInputMessage] = useState('');
-    const [uploadedPDF, setUploadedPDF] = useState(null);
-    const [pdfName, setPdfName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [dragActive, setDragActive] = useState(false);
     const fileInputRef = useRef(null);
@@ -34,8 +32,7 @@ const PDFInterface = ({ messages, addMessage, clearMessages }) => {
                 return;
             }
 
-            setUploadedPDF(file);
-            setPdfName(file.name);
+            setPDFFile(file, file.name);
             clearMessages();
         } else {
             alert('Please upload a valid PDF file');
@@ -67,9 +64,7 @@ const PDFInterface = ({ messages, addMessage, clearMessages }) => {
     };
 
     const handleRemovePDF = () => {
-        setUploadedPDF(null);
-        setPdfName('');
-        clearMessages();
+        clearPDFFile();
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }

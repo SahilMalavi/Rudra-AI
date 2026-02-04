@@ -4,48 +4,113 @@ import ChatInterface from './components/ChatInterface';
 import ImageInterface from './components/ImageInterface';
 import PDFInterface from './components/PDFInterface';
 
-// Message reducer for better state management
-const messageReducer = (state, action) => {
+// Combined state reducer for messages and files
+const appReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_MESSAGE':
             return {
                 ...state,
-                [action.mode]: [...state[action.mode], action.message]
+                messages: {
+                    ...state.messages,
+                    [action.mode]: [...state.messages[action.mode], action.message]
+                }
             };
         case 'SET_MESSAGES':
             return {
                 ...state,
-                [action.mode]: action.messages
+                messages: {
+                    ...state.messages,
+                    [action.mode]: action.messages
+                }
             };
         case 'CLEAR_MESSAGES':
             return {
                 ...state,
-                [action.mode]: []
+                messages: {
+                    ...state.messages,
+                    [action.mode]: []
+                }
             };
         case 'RESET_MODE':
             return {
                 ...state,
-                [action.mode]: action.initialMessage ? [action.initialMessage] : []
+                messages: {
+                    ...state.messages,
+                    [action.mode]: action.initialMessage ? [action.initialMessage] : []
+                }
+            };
+        case 'SET_IMAGE':
+            return {
+                ...state,
+                files: {
+                    ...state.files,
+                    image: {
+                        file: action.file,
+                        preview: action.preview,
+                        name: action.name
+                    }
+                }
+            };
+        case 'CLEAR_IMAGE':
+            return {
+                ...state,
+                files: {
+                    ...state.files,
+                    image: null
+                },
+                messages: {
+                    ...state.messages,
+                    image: []
+                }
+            };
+        case 'SET_PDF':
+            return {
+                ...state,
+                files: {
+                    ...state.files,
+                    pdf: {
+                        file: action.file,
+                        name: action.name
+                    }
+                }
+            };
+        case 'CLEAR_PDF':
+            return {
+                ...state,
+                files: {
+                    ...state.files,
+                    pdf: null
+                },
+                messages: {
+                    ...state.messages,
+                    pdf: []
+                }
             };
         default:
             return state;
     }
 };
 
-const initialMessages = {
-    chat: [
-        {
-            role: 'assistant',
-            content: 'Hello! I\'m Rudra, your personal assistant. How can I help you today?'
-        }
-    ],
-    image: [],
-    pdf: []
+const initialState = {
+    messages: {
+        chat: [
+            {
+                role: 'assistant',
+                content: 'Hello! I\'m Rudra, your personal assistant created by Sahil Malavi. How can I help you today?'
+            }
+        ],
+        image: [],
+        pdf: []
+    },
+    files: {
+        image: null,
+        pdf: null
+    }
 };
 
 function App() {
     const [currentMode, setCurrentMode] = useState('chat');
-    const [messages, dispatch] = useReducer(messageReducer, initialMessages);
+    const [state, dispatch] = useReducer(appReducer, initialState);
 
     const addMessage = (mode, message) => {
         dispatch({ type: 'ADD_MESSAGE', mode, message });
@@ -62,7 +127,7 @@ function App() {
     const resetMode = (mode, includeGreeting = false) => {
         const greeting = mode === 'chat' ? {
             role: 'assistant',
-            content: 'Hello! I\'m Rudra, your personal assistant. How can I help you today?'
+            content: 'Hello! I\'m Rudra, your personal assistant created by Sahil Malavi. How can I help you today?'
         } : null;
 
         dispatch({
@@ -72,9 +137,26 @@ function App() {
         });
     };
 
+    // File management functions
+    const setImageFile = (file, preview, name) => {
+        dispatch({ type: 'SET_IMAGE', file, preview, name });
+    };
+
+    const clearImageFile = () => {
+        dispatch({ type: 'CLEAR_IMAGE' });
+    };
+
+    const setPDFFile = (file, name) => {
+        dispatch({ type: 'SET_PDF', file, name });
+    };
+
+    const clearPDFFile = () => {
+        dispatch({ type: 'CLEAR_PDF' });
+    };
+
     const renderCurrentInterface = () => {
-        const props = {
-            messages: messages[currentMode],
+        const baseProps = {
+            messages: state.messages[currentMode],
             addMessage: (msg) => addMessage(currentMode, msg),
             setMessages: (msgs) => setMessages(currentMode, msgs),
             clearMessages: () => clearMessages(currentMode),
@@ -83,13 +165,25 @@ function App() {
 
         switch (currentMode) {
             case 'chat':
-                return <ChatInterface {...props} />;
+                return <ChatInterface {...baseProps} />;
             case 'image':
-                return <ImageInterface {...props} />;
+                return <ImageInterface
+                    {...baseProps}
+                    uploadedImage={state.files.image?.file}
+                    imagePreview={state.files.image?.preview}
+                    setImageFile={setImageFile}
+                    clearImageFile={clearImageFile}
+                />;
             case 'pdf':
-                return <PDFInterface {...props} />;
+                return <PDFInterface
+                    {...baseProps}
+                    uploadedPDF={state.files.pdf?.file}
+                    pdfName={state.files.pdf?.name}
+                    setPDFFile={setPDFFile}
+                    clearPDFFile={clearPDFFile}
+                />;
             default:
-                return <ChatInterface {...props} />;
+                return <ChatInterface {...baseProps} />;
         }
     };
 
