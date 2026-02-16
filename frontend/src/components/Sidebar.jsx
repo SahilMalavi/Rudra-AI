@@ -35,10 +35,12 @@ const Sidebar = ({ currentMode, setCurrentMode }) => {
 
     return (
         <>
-            {/* Mobile menu button */}
+            {/* Mobile menu button - MOVED TO TOP RIGHT CORNER */}
+            {/* Positioned at top-6 right-6 to take the standard "Action" spot. 
+                (You should move your existing Reset Chat button to the Left to swap them) */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden fixed top-6 left-6 z-50 p-3 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 text-white hover:bg-white/20 transition-all duration-300 group"
+                className="md:hidden fixed top-6 right-6 z-[60] p-3 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 text-white hover:bg-white/20 transition-all duration-300 group"
                 aria-label="Toggle menu"
             >
                 {isOpen ? (
@@ -61,7 +63,7 @@ const Sidebar = ({ currentMode, setCurrentMode }) => {
                 className={`fixed md:relative inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-slate-900/95 via-indigo-950/95 to-slate-900/95 backdrop-blur-xl border-r border-white/10 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'
                     } md:translate-x-0 transition-transform duration-500 ease-out shadow-2xl`}
             >
-                {/* Header */}
+                {/* Header - Standard padding */}
                 <div className="p-6 border-b border-white/10">
                     <div className="flex items-center space-x-2 mb-1">
                         <div className="relative">
@@ -87,8 +89,8 @@ const Sidebar = ({ currentMode, setCurrentMode }) => {
                                     key={mode.id}
                                     onClick={() => handleModeChange(mode.id)}
                                     className={`w-full group relative overflow-hidden rounded-xl transition-all duration-300 ${isActive
-                                            ? 'scale-105 shadow-2xl'
-                                            : 'hover:scale-102 hover:shadow-xl'
+                                        ? 'scale-105 shadow-2xl'
+                                        : 'hover:scale-102 hover:shadow-xl'
                                         }`}
                                     style={{
                                         animationDelay: `${index * 100}ms`
@@ -104,22 +106,22 @@ const Sidebar = ({ currentMode, setCurrentMode }) => {
 
                                     {/* Content */}
                                     <div className={`relative flex items-center px-4 py-3 border transition-all duration-300 rounded-xl ${isActive
-                                            ? 'bg-white/5 border-white/20'
-                                            : 'bg-white/5 border-white/10 hover:border-white/20'
+                                        ? 'bg-white/5 border-white/20'
+                                        : 'bg-white/5 border-white/10 hover:border-white/20'
                                         }`}>
                                         <div className={`p-2 rounded-lg mr-3 transition-all duration-300 ${isActive
-                                                ? 'bg-white/20'
-                                                : 'bg-white/10 group-hover:bg-white/20'
+                                            ? 'bg-white/20'
+                                            : 'bg-white/10 group-hover:bg-white/20'
                                             }`}>
                                             <Icon className={`w-4 h-4 transition-all duration-300 ${isActive
-                                                    ? 'text-white'
-                                                    : 'text-slate-300 group-hover:text-white'
+                                                ? 'text-white'
+                                                : 'text-slate-300 group-hover:text-white'
                                                 }`} />
                                         </div>
                                         <div className="flex-1 text-left">
                                             <div className={`text-sm font-semibold transition-colors duration-300 ${isActive
-                                                    ? 'text-white'
-                                                    : 'text-slate-300 group-hover:text-white'
+                                                ? 'text-white'
+                                                : 'text-slate-300 group-hover:text-white'
                                                 }`}>
                                                 {mode.label}
                                             </div>
